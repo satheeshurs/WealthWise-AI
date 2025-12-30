@@ -1,5 +1,6 @@
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { FloatingChatbot } from "./FloatingChatbot";
 import { ReactNode } from "react";
 
 interface LayoutProps {
@@ -18,6 +19,7 @@ export function Layout({ children }: LayoutProps) {
           </div>
         </main>
       </div>
+      <FloatingChatbot />
     </div>
   );
 }

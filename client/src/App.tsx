@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout/Layout";
 import Dashboard from "@/pages/Dashboard";
-import AIAdvisor from "@/pages/AIAdvisor";
 import NotFound from "@/pages/not-found";
 
 // Placeholder pages for navigation
@@ -22,9 +21,6 @@ function Router() {
         <Route path="/clients" component={Clients} />
         <Route path="/portfolios" component={Portfolios} />
         <Route path="/market" component={Market} />
-        <Route path="/ai-advisor">
-          <AIAdvisor />
-        </Route>
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
