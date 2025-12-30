@@ -52,28 +52,71 @@ const wealthAdvisorKnowledge: Record<string, string[]> = {
 
 function getContextualResponse(userInput: string): string {
   const input = userInput.toLowerCase();
-  
-  // Check for keywords and return relevant responses
-  for (const [category, responses] of Object.entries(wealthAdvisorKnowledge)) {
-    if (input.includes(category) || 
-        (category === "portfolio" && (input.includes("allocation") || input.includes("asset") || input.includes("position"))) ||
-        (category === "tax" && (input.includes("tax") || input.includes("harvest") || input.includes("loss"))) ||
-        (category === "rebalancing" && (input.includes("rebalance") || input.includes("drift") || input.includes("target"))) ||
-        (category === "risk" && (input.includes("risk") || input.includes("concentration") || input.includes("volatility"))) ||
-        (category === "market" && (input.includes("market") || input.includes("trends") || input.includes("outlook"))) ||
-        (category === "client" && (input.includes("client") || input.includes("account") || input.includes("aum"))) ||
-        (category === "compliance" && (input.includes("compliance") || input.includes("reg") || input.includes("regulation")))) {
-      return responses[Math.floor(Math.random() * responses.length)];
+  let matchedCategory = null;
+  let matchScore = 0;
+
+  // Define keyword patterns for each category
+  const categoryKeywords: Record<string, { keywords: string[]; score: number }> = {
+    tax: {
+      keywords: ["tax", "harvest", "loss", "deduction", "bracket", "irs", "w2", "1099", "capital gain", "withhold", "estimated"],
+      score: 0,
+    },
+    rebalancing: {
+      keywords: ["rebalanc", "drift", "target", "allocation", "adjust", "overweight", "underweight", "realign"],
+      score: 0,
+    },
+    risk: {
+      keywords: ["risk", "concentration", "volatility", "hedge", "protection", "drawdown", "stress test", "correlation"],
+      score: 0,
+    },
+    market: {
+      keywords: ["market", "trend", "outlook", "sector", "yield", "rate", "rally", "correction", "momentum", "valuation"],
+      score: 0,
+    },
+    client: {
+      keywords: ["client", "account", "aum", "book", "retention", "performance vs", "benchmark", "fee"],
+      score: 0,
+    },
+    compliance: {
+      keywords: ["compliance", "reg", "regulation", "documentation", "execution", "suitability", "training", "audit"],
+      score: 0,
+    },
+    portfolio: {
+      keywords: ["portfolio", "allocation", "asset", "position", "equity", "bond", "exposure", "diversif"],
+      score: 0,
+    },
+  };
+
+  // Score each category based on keyword matches
+  for (const [category, data] of Object.entries(categoryKeywords)) {
+    for (const keyword of data.keywords) {
+      if (input.includes(keyword)) {
+        categoryKeywords[category].score += 1;
+      }
     }
   }
-  
+
+  // Find the category with highest score
+  for (const [category, data] of Object.entries(categoryKeywords)) {
+    if (data.score > matchScore) {
+      matchScore = data.score;
+      matchedCategory = category;
+    }
+  }
+
+  // Return category-specific response if matched, otherwise general response
+  if (matchedCategory && matchScore > 0 && wealthAdvisorKnowledge[matchedCategory]) {
+    const responses = wealthAdvisorKnowledge[matchedCategory];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+
   // Default general wealth management responses
   const generalResponses = [
-    "I can help you with portfolio analysis, tax optimization, rebalancing strategies, risk management, market insights, and client account analysis. What aspect of wealth management would you like to explore?",
-    "As your Nous AI advisor, I specialize in wealth management insights. I can analyze your portfolios for optimization opportunities, help with tax planning, and monitor market trends. What's on your mind?",
-    "I'm analyzing your wealth management data. Ask me about portfolio performance, tax-loss harvesting opportunities, client concentration risks, or market trends.",
+    "I can help you with portfolio analysis, tax optimization, rebalancing strategies, risk management, market insights, and client account analysis. What specific aspect of wealth management would you like to explore?",
+    "As your Nous AI advisor, I specialize in wealth management insights. I can analyze your portfolios, identify tax opportunities, monitor client accounts, and assess market trends. What would you like to discuss?",
+    "I'm here to help with your wealth management needs. You can ask me about portfolio optimization, tax planning, rebalancing opportunities, client performance, market analysis, or compliance matters. What interests you?",
   ];
-  
+
   return generalResponses[Math.floor(Math.random() * generalResponses.length)];
 }
 
