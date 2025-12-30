@@ -11,42 +11,42 @@ interface Message {
   timestamp: Date;
 }
 
-// Wealth management knowledge base for context-aware responses
-const wealthAdvisorKnowledge: Record<string, string[]> = {
-  portfolio: [
-    "I'm analyzing your portfolio allocations. Based on the current market environment, consider rebalancing your equity exposure. Your tech allocation is at 45% vs. the recommended 35% target.",
-    "Your portfolio shows signs of style drift. The concentrated positions in large-cap growth could be balanced with defensive sectors to reduce idiosyncratic risk.",
-    "I've identified an opportunity to optimize your portfolio's tax efficiency. Tax-loss harvesting in your underperforming positions could offset $40k+ in gains.",
+// Application workflow assistance knowledge base
+const appAssistanceKnowledge: Record<string, string[]> = {
+  dashboard: [
+    "The Dashboard is your command center. It displays your Total AUM, Client count, average portfolio returns, and advisory fees YTD. You can see the AUM trend chart and top client accounts here.",
+    "On the Dashboard, the 'Nous AI Insights' card shows real-time alerts about tax opportunities, portfolio drift, and compliance status. Click the chat button to dive deeper into any insight.",
+    "The Dashboard charts help you track your Assets Under Management over time. Use the time period selector to view different timeframes (1M, 3M, YTD, 1Y, All Time).",
   ],
-  tax: [
-    "Tax planning analysis complete. I found 3 clients with unrealized losses >$50k in the Technology sector. Harvesting these losses strategically could significantly reduce tax liability.",
-    "Your year-end tax position shows opportunities for charitable gifting strategies and donor-advised fund contributions to optimize your tax outcome.",
-    "I recommend reviewing your estimated tax payments. Based on current income projections, you may benefit from adjusting withholdings to avoid overpayment.",
+  clients: [
+    "The Clients section lets you manage your client relationships and accounts. You can view client details, AUM, year-to-date returns, and risk profiles in the main client list.",
+    "Click on any client in the Client Management section to see detailed account information, portfolio holdings, and performance metrics for that specific account.",
+    "Use the Clients page to track client retention, identify high-value accounts, and monitor which clients need portfolio reviews or rebalancing.",
   ],
-  rebalancing: [
-    "Portfolio drift detected on the McKenzie Trust: Your allocation has shifted 7% from target due to recent market rally in equities. Would you like me to generate a rebalancing recommendation?",
-    "Quarterly rebalancing analysis shows your fixed income allocation has declined from 40% to 28%. Rebalancing back to target would restore your risk profile.",
-    "I've detected significant drift in your strategic asset allocation. Recommend selling overweight positions and purchasing underweight allocations across your client accounts.",
-  ],
-  risk: [
-    "Risk analysis complete: 3 of your clients have concentrated positions in the Energy sector (>25% of portfolio). Diversification could reduce their idiosyncratic risk by ~15%.",
-    "I'm detecting elevated market risk in your equity allocations. Consider a systematic de-risking strategy or implementing hedging strategies for large positions.",
-    "Your portfolio's volatility has increased 12% this quarter. I recommend stress-testing your allocation against recent market scenarios and considering protective puts.",
+  portfolios: [
+    "The Portfolios section provides deep analysis of your portfolio allocations, asset class breakdowns, and performance versus benchmarks. Use this to optimize client portfolios.",
+    "In Portfolio Analysis, you can identify concentration risks, compare allocations to targets, and plan rebalancing strategies for underperforming positions.",
+    "View detailed portfolio statistics including volatility, Sharpe ratio, drawdown analysis, and correlation matrices to make informed investment decisions.",
   ],
   market: [
-    "Market insights: Emerging markets are showing strong momentum with a 8.5% YTD return. Your international allocation at 15% appears underweight relative to opportunities.",
-    "Fixed income outlook: With yields currently elevated, now presents a compelling opportunity to increase duration and capture higher returns in your bond portfolio.",
-    "Sector analysis shows Technology and Healthcare driving market returns. However, valuations are stretched. I recommend a balanced approach with selective exposure.",
+    "The Market Insights section gives you real-time market data, sector trends, and economic indicators to inform your investment decisions and client recommendations.",
+    "Use Market Insights to stay updated on yield curves, interest rate movements, sector rotation trends, and macroeconomic catalysts affecting your portfolios.",
+    "Monitor emerging market opportunities, relative valuations across sectors, and key economic data releases to time rebalancing and tactical adjustments.",
   ],
-  client: [
-    "Client account analysis: Your high-net-worth client base shows average AUM of $2.4M with 8.2% YTD returns. Advisory fees have grown 12% YoY.",
-    "I've identified 2 clients whose accounts show underperformance vs. their benchmarks. Recommend a portfolio review meeting to discuss optimization strategies.",
-    "Your client retention rate stands at 94% with new client AUM growth of 18% YoY. Continue focusing on personalized wealth planning services.",
+  navigation: [
+    "Use the left sidebar to navigate between Dashboard, Clients, Portfolios, Market Insights, and Settings. The sidebar shows your current location with a highlighted menu item.",
+    "The top header has a search bar to quickly find clients or securities, and a notification bell for important alerts and market updates.",
+    "Click the Nous Wealth logo to return to the Dashboard from anywhere in the application.",
   ],
-  compliance: [
-    "Compliance status: Your Q4 Reg BI documentation is 95% complete. I recommend reviewing the remaining 5% of client agreements before year-end.",
-    "Annual compliance review shows strong adherence to suitability standards across all accounts. Recommend quarterly training refresher for your advisory team.",
-    "I've reviewed your best execution reporting. All trades demonstrated best execution standards with minimal market impact. Excellent compliance record.",
+  settings: [
+    "Settings lets you customize your account preferences, notification rules, dashboard widgets, and viewing preferences.",
+    "In Settings, you can configure which insights appear on your dashboard, set alert thresholds, and manage your account information.",
+    "Use Settings to update your profile, set up API integrations, manage user permissions, and configure automation rules.",
+  ],
+  help: [
+    "I can help you navigate the Nous Wealth application. Ask me about the Dashboard, Clients, Portfolios, Market Insights, or any feature you'd like to understand.",
+    "Need help finding something? Just ask me about a specific section or feature, and I'll guide you through how to use it and where to find what you need.",
+    "I'm here to help you get the most out of Nous Wealth. Ask about navigating sections, using tools, understanding reports, or optimizing your workflow.",
   ],
 };
 
@@ -55,34 +55,34 @@ function getContextualResponse(userInput: string): string {
   let matchedCategory = null;
   let matchScore = 0;
 
-  // Define keyword patterns for each category
+  // Define keyword patterns for each section
   const categoryKeywords: Record<string, { keywords: string[]; score: number }> = {
-    tax: {
-      keywords: ["tax", "harvest", "loss", "deduction", "bracket", "irs", "w2", "1099", "capital gain", "withhold", "estimated"],
+    dashboard: {
+      keywords: ["dashboard", "overview", "aum", "assets under management", "stats", "metrics", "cards", "chart", "trend", "total"],
       score: 0,
     },
-    rebalancing: {
-      keywords: ["rebalanc", "drift", "target", "allocation", "adjust", "overweight", "underweight", "realign"],
+    clients: {
+      keywords: ["client", "account", "book", "manage", "customer", "relationship", "list", "table", "status"],
       score: 0,
     },
-    risk: {
-      keywords: ["risk", "concentration", "volatility", "hedge", "protection", "drawdown", "stress test", "correlation"],
+    portfolios: {
+      keywords: ["portfolio", "allocation", "asset", "position", "holdings", "analysis", "rebalance", "target"],
       score: 0,
     },
     market: {
-      keywords: ["market", "trend", "outlook", "sector", "yield", "rate", "rally", "correction", "momentum", "valuation"],
+      keywords: ["market", "insight", "trend", "sector", "economic", "yield", "rate", "data", "outlook"],
       score: 0,
     },
-    client: {
-      keywords: ["client", "account", "aum", "book", "retention", "performance vs", "benchmark", "fee"],
+    navigation: {
+      keywords: ["navigate", "sidebar", "menu", "page", "section", "button", "go to", "find", "where", "how to get"],
       score: 0,
     },
-    compliance: {
-      keywords: ["compliance", "reg", "regulation", "documentation", "execution", "suitability", "training", "audit"],
+    settings: {
+      keywords: ["settings", "preferences", "configure", "setup", "customize", "options", "profile"],
       score: 0,
     },
-    portfolio: {
-      keywords: ["portfolio", "allocation", "asset", "position", "equity", "bond", "exposure", "diversif"],
+    help: {
+      keywords: ["help", "guide", "how", "explain", "what is", "feature", "use", "understand", "tutorial"],
       score: 0,
     },
   };
@@ -105,16 +105,16 @@ function getContextualResponse(userInput: string): string {
   }
 
   // Return category-specific response if matched, otherwise general response
-  if (matchedCategory && matchScore > 0 && wealthAdvisorKnowledge[matchedCategory]) {
-    const responses = wealthAdvisorKnowledge[matchedCategory];
+  if (matchedCategory && matchScore > 0 && appAssistanceKnowledge[matchedCategory]) {
+    const responses = appAssistanceKnowledge[matchedCategory];
     return responses[Math.floor(Math.random() * responses.length)];
   }
 
-  // Default general wealth management responses
+  // Default general app assistance responses
   const generalResponses = [
-    "I can help you with portfolio analysis, tax optimization, rebalancing strategies, risk management, market insights, and client account analysis. What specific aspect of wealth management would you like to explore?",
-    "As your Nous AI advisor, I specialize in wealth management insights. I can analyze your portfolios, identify tax opportunities, monitor client accounts, and assess market trends. What would you like to discuss?",
-    "I'm here to help with your wealth management needs. You can ask me about portfolio optimization, tax planning, rebalancing opportunities, client performance, market analysis, or compliance matters. What interests you?",
+    "I'm here to help you navigate and use the Nous Wealth application! Ask me about the Dashboard, Clients section, Portfolios, Market Insights, or how to use any feature.",
+    "Welcome! I can guide you through the Nous Wealth platform. Need help with a specific section? Ask about Dashboard, Clients, Portfolios, Market Insights, navigation, or Settings.",
+    "I'm your application assistant for Nous Wealth. Ask me about any section, feature, or workflow - I'll help you find what you need and explain how to use it.",
   ];
 
   return generalResponses[Math.floor(Math.random() * generalResponses.length)];
@@ -126,7 +126,7 @@ export function FloatingChatbot() {
     {
       id: "1",
       type: "assistant",
-      content: "Hi! 👋 I'm Nous, your AI wealth advisor. I analyze your portfolios, identify optimization opportunities, monitor client accounts, and provide market insights. Ask me about portfolio rebalancing, tax strategies, risk management, or any aspect of wealth management!",
+      content: "Hi! 👋 I'm your Nous Application Assistant. I'm here to help you navigate and get the most out of the Nous Wealth platform. Ask me about the Dashboard, Clients, Portfolios, Market Insights, or how to use any feature!",
       timestamp: new Date(),
     },
   ]);
@@ -199,8 +199,8 @@ export function FloatingChatbot() {
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
               <div className="text-white">
-                <h3 className="font-semibold text-sm">Nous AI Advisor</h3>
-                <p className="text-xs opacity-80">Wealth Management Expert</p>
+                <h3 className="font-semibold text-sm">Nous Assistant</h3>
+                <p className="text-xs opacity-80">Application Guidance</p>
               </div>
             </div>
             <button
@@ -287,24 +287,24 @@ export function FloatingChatbot() {
                 <div className="flex flex-wrap gap-1">
                   <button
                     type="button"
-                    onClick={() => setInput("What tax optimization opportunities do I have?")}
+                    onClick={() => setInput("How do I use the Dashboard?")}
                     className="px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-xs"
                   >
-                    Tax Planning
+                    Dashboard
                   </button>
                   <button
                     type="button"
-                    onClick={() => setInput("Show me portfolio rebalancing recommendations")}
+                    onClick={() => setInput("How do I manage clients?")}
                     className="px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-xs"
                   >
-                    Rebalancing
+                    Clients
                   </button>
                   <button
                     type="button"
-                    onClick={() => setInput("What risks should I monitor?")}
+                    onClick={() => setInput("Where is the Portfolio section?")}
                     className="px-2 py-1 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors text-xs"
                   >
-                    Risk Management
+                    Navigation
                   </button>
                 </div>
               </div>
