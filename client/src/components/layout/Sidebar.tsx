@@ -25,7 +25,7 @@ export function Sidebar() {
     <div className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="flex h-16 items-center px-6">
         <h1 className="font-serif text-2xl font-bold tracking-tight text-white">
-          NEXUS <span className="text-sidebar-primary">WEALTH</span>
+          NOUS <span className="text-sidebar-primary">WEALTH</span>
         </h1>
       </div>
       

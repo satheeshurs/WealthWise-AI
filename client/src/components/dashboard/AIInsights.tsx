@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowRight, AlertTriangle, TrendingUp, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 const insights = [
   {
@@ -33,6 +34,8 @@ const insights = [
 ];
 
 export function AIInsights() {
+  const [, navigate] = useLocation();
+  
   return (
     <Card className="h-full border-border/60 bg-gradient-to-br from-card to-background">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -40,7 +43,7 @@ export function AIInsights() {
           <div className="p-1.5 rounded-md bg-indigo-100 text-indigo-600">
             <Sparkles className="h-4 w-4" />
           </div>
-          <CardTitle className="text-base font-serif font-semibold">Nexus AI Insights</CardTitle>
+          <CardTitle className="text-base font-serif font-semibold">Nous AI Insights</CardTitle>
         </div>
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-7">Settings</Button>
       </CardHeader>
@@ -66,9 +69,12 @@ export function AIInsights() {
         })}
         
         <div className="pt-2">
-          <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
+          <Button 
+            onClick={() => navigate("/ai-advisor")}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+          >
             <Sparkles className="mr-2 h-4 w-4" />
-            Ask Nexus Assistant
+            Ask Nous Assistant
           </Button>
         </div>
       </CardContent>
