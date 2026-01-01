@@ -24,9 +24,6 @@ export function Sidebar() {
   return (
     <div className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="flex h-16 items-center px-6">
-        <div className="h-8 w-8 rounded bg-primary flex items-center justify-center mr-2">
-          <span className="text-white font-bold text-xl italic">N</span>
-        </div>
         <h1 className="font-serif text-xl font-bold tracking-tight text-white uppercase">
           Nous <span className="text-sidebar-primary">Wealth</span>
         </h1>
