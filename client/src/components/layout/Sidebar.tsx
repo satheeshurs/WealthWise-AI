@@ -22,8 +22,11 @@ export function Sidebar() {
   return (
     <div className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="flex h-16 items-center px-6">
-        <h1 className="font-serif text-2xl font-bold tracking-tight text-white">
-          NOUS <span className="text-sidebar-primary">WEALTH</span>
+        <div className="h-8 w-8 rounded bg-primary flex items-center justify-center mr-2">
+          <span className="text-white font-bold text-xl">N</span>
+        </div>
+        <h1 className="font-serif text-xl font-bold tracking-tight text-white uppercase">
+          Nousingo <span className="text-sidebar-primary">Systems</span>
         </h1>
       </div>
       

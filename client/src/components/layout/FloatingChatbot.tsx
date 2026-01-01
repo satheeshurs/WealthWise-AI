@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Sparkles, Send, X, MessageCircle, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { useLocation } from "wouter";
+
 interface Message {
   id: string;
   type: "user" | "assistant";
@@ -50,28 +52,36 @@ const appAssistanceKnowledge: Record<string, string[]> = {
   ],
 };
 
-function getContextualResponse(userInput: string): string {
+function getContextualResponse(userInput: string, currentLocation: string): string {
   const input = userInput.toLowerCase();
   let matchedCategory = null;
   let matchScore = 0;
 
+  // Add location-based bias to scoring
+  const locationKeywords: Record<string, string[]> = {
+    "/": ["dashboard", "overview", "aum", "summary"],
+    "/clients": ["client", "manager", "table", "list", "status", "people"],
+    "/portfolios": ["portfolio", "allocation", "analytics", "engine", "metric", "sharpe", "alpha", "beta"],
+    "/market": ["market", "global", "news", "sector", "impact", "trend", "yield"],
+  };
+
   // Define keyword patterns for each section
   const categoryKeywords: Record<string, { keywords: string[]; score: number }> = {
     dashboard: {
-      keywords: ["dashboard", "overview", "aum", "assets under management", "stats", "metrics", "cards", "chart", "trend", "total"],
-      score: 0,
+      keywords: ["dashboard", "overview", "aum", "assets under management", "stats", "metrics", "cards", "chart", "trend", "total", "summary"],
+      score: currentLocation === "/" ? 2 : 0,
     },
     clients: {
-      keywords: ["client", "account", "book", "manage", "customer", "relationship", "list", "table", "status"],
-      score: 0,
+      keywords: ["client", "account", "book", "manage", "customer", "relationship", "list", "table", "status", "people", "sarah chen", "mark thompson"],
+      score: currentLocation === "/clients" ? 2 : 0,
     },
     portfolios: {
-      keywords: ["portfolio", "allocation", "asset", "position", "holdings", "analysis", "rebalance", "target"],
-      score: 0,
+      keywords: ["portfolio", "allocation", "asset", "position", "holdings", "analysis", "rebalance", "target", "engine", "analytics", "sharpe", "alpha", "beta", "volatility", "efficiency"],
+      score: currentLocation === "/portfolios" ? 2 : 0,
     },
     market: {
-      keywords: ["market", "insight", "trend", "sector", "economic", "yield", "rate", "data", "outlook"],
-      score: 0,
+      keywords: ["market", "insight", "trend", "sector", "economic", "yield", "rate", "data", "outlook", "global", "news", "impact", "tactical"],
+      score: currentLocation === "/market" ? 2 : 0,
     },
     navigation: {
       keywords: ["navigate", "sidebar", "menu", "page", "section", "button", "go to", "find", "where", "how to get"],
@@ -121,12 +131,13 @@ function getContextualResponse(userInput: string): string {
 }
 
 export function FloatingChatbot() {
+  const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       type: "assistant",
-      content: "Hi! 👋 I'm your Nous Application Assistant. I'm here to help you navigate and get the most out of the Nous Wealth platform. Ask me about the Dashboard, Clients, Portfolios, Market Insights, or how to use any feature!",
+      content: "Hi! 👋 I'm your Nousingo Assistant. I'm here to help you navigate our systems. I'm currently monitoring your view on the " + (location === "/" ? "Dashboard" : location.slice(1).charAt(0).toUpperCase() + location.slice(2)) + " page. How can I assist you today?",
       timestamp: new Date(),
     },
   ]);
@@ -157,7 +168,7 @@ export function FloatingChatbot() {
     setIsLoading(true);
 
     setTimeout(() => {
-      const response = getContextualResponse(input);
+      const response = getContextualResponse(input, location);
       const assistantMessage: Message = {
         id: String(Date.now() + 1),
         type: "assistant",
@@ -199,8 +210,8 @@ export function FloatingChatbot() {
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
               <div className="text-white">
-                <h3 className="font-semibold text-sm">Nous Assistant</h3>
-                <p className="text-xs opacity-80">Application Guidance</p>
+                <h3 className="font-semibold text-sm">Nousingo Assistant</h3>
+                <p className="text-xs opacity-80">System Support AI</p>
               </div>
             </div>
             <button
