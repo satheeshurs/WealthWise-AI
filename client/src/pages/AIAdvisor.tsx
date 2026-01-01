@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Sparkles, Send, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getAIResponse } from "@/lib/ai-service";
 
 interface Message {
   id: string;
@@ -11,17 +12,6 @@ interface Message {
   content: string;
   timestamp: Date;
 }
-
-const sampleResponses = [
-  "Based on your portfolio analysis, I recommend rebalancing your tech exposure. Your current allocation is 45% vs. the target 35%.",
-  "I've identified a tax-loss harvesting opportunity in your McKenzie Trust account that could offset $50k+ in gains.",
-  "Your fixed income allocation is underperforming. Consider adjusting the duration to capture higher yields in the current rate environment.",
-  "Portfolio drift detected: Your allocation has shifted 7% from target. Would you like me to generate a rebalancing recommendation?",
-  "I found 3 clients with concentrated positions in Energy sector. Diversification could reduce their idiosyncratic risk by ~15%.",
-  "To use this dashboard: Use the 'Portfolios' tab to view specific asset breakdowns, or 'Market' for real-time data feeds. I can analyze any view you're currently on.",
-  "Wealth support: I can help with retirement planning, estate tax optimization, and intergenerational wealth transfer strategies. What's your primary goal?",
-  "To manage your client list, navigate to the 'Clients' section. You can filter by AUM, risk profile, or upcoming review dates."
-];
 
 export default function AIAdvisor() {
   const [messages, setMessages] = useState<Message[]>([
@@ -58,33 +48,12 @@ export default function AIAdvisor() {
     setInput("");
     setIsLoading(true);
 
-    // Dynamic responses based on keywords
-    const getResponse = (text: string) => {
-      const lower = text.toLowerCase();
-      if (lower.includes("rebalance") || lower.includes("allocation")) {
-        return "Based on your portfolio analysis, I recommend rebalancing your tech exposure. Your current allocation is 45% vs. the target 35%.";
-      }
-      if (lower.includes("tax") || lower.includes("harvesting")) {
-        return "I've identified a tax-loss harvesting opportunity in your McKenzie Trust account that could offset $50k+ in gains.";
-      }
-      if (lower.includes("income") || lower.includes("yield")) {
-        return "Your fixed income allocation is underperforming. Consider adjusting the duration to capture higher yields in the current rate environment.";
-      }
-      if (lower.includes("client") || lower.includes("manage")) {
-        return "To manage your client list, navigate to the 'Clients' section. You can filter by AUM, risk profile, or upcoming review dates.";
-      }
-      if (lower.includes("help") || lower.includes("support")) {
-        return "Wealth support: I can help with retirement planning, estate tax optimization, and intergenerational wealth transfer strategies. What's your primary goal?";
-      }
-      return sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
-    };
-
     // Simulate AI response delay
     setTimeout(() => {
       const assistantMessage: Message = {
         id: String(Date.now() + 1),
         type: "assistant",
-        content: getResponse(input),
+        content: getAIResponse(input, "/advisor"),
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);

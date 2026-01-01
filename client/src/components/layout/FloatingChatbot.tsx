@@ -5,144 +5,13 @@ import { Sparkles, Send, X, MessageCircle, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { useLocation } from "wouter";
+import { getAIResponse } from "@/lib/ai-service";
 
 interface Message {
   id: string;
   type: "user" | "assistant";
   content: string;
   timestamp: Date;
-}
-
-// Application workflow assistance knowledge base
-const appAssistanceKnowledge: Record<string, string[]> = {
-  dashboard: [
-    "The Dashboard is your command center. It displays your Total AUM, Client count, average portfolio returns, and advisory fees YTD. You can see the AUM trend chart and top client accounts here.",
-    "On the Dashboard, the 'Nous AI Insights' card shows real-time alerts about tax opportunities, portfolio drift, and compliance status. Click the chat button to dive deeper into any insight.",
-    "The Dashboard charts help you track your Assets Under Management over time. Use the time period selector to view different timeframes (1M, 3M, YTD, 1Y, All Time).",
-  ],
-  clients: [
-    "The Clients section lets you manage your client relationships and accounts. You can view client details, AUM, year-to-date returns, and risk profiles in the main client list.",
-    "Click on any client in the Client Management section to see detailed account information, portfolio holdings, and performance metrics for that specific account.",
-    "Use the Clients page to track client retention, identify high-value accounts, and monitor which clients need portfolio reviews or rebalancing.",
-  ],
-  portfolios: [
-    "The Portfolios section provides deep analysis of your portfolio allocations, asset class breakdowns, and performance versus benchmarks. Use this to optimize client portfolios.",
-    "In Portfolio Analysis, you can identify concentration risks, compare allocations to targets, and plan rebalancing strategies for underperforming positions.",
-    "View detailed portfolio statistics including volatility, Sharpe ratio, drawdown analysis, and correlation matrices to make informed investment decisions.",
-  ],
-  market: [
-    "The Market Insights section gives you real-time market data, sector trends, and economic indicators to inform your investment decisions and client recommendations.",
-    "Use Market Insights to stay updated on yield curves, interest rate movements, sector rotation trends, and macroeconomic catalysts affecting your portfolios.",
-    "Monitor emerging market opportunities, relative valuations across sectors, and key economic data releases to time rebalancing and tactical adjustments.",
-  ],
-  navigation: [
-    "Use the left sidebar to navigate between Dashboard, Clients, Portfolios, Market Insights, and Settings. The sidebar shows your current location with a highlighted menu item.",
-    "The top header has a search bar to quickly find clients or securities, and a notification bell for important alerts and market updates.",
-    "Click the Nous Wealth logo to return to the Dashboard from anywhere in the application.",
-  ],
-  settings: [
-    "Settings lets you customize your account preferences, notification rules, dashboard widgets, and viewing preferences.",
-    "In Settings, you can configure which insights appear on your dashboard, set alert thresholds, and manage your account information.",
-    "Use Settings to update your profile, set up API integrations, manage user permissions, and configure automation rules.",
-  ],
-  help: [
-    "I can help you navigate the Nous Wealth application. Ask me about the Dashboard, Clients, Portfolios, Market Insights, or any feature you'd like to understand.",
-    "Need help finding something? Just ask me about a specific section or feature, and I'll guide you through how to use it and where to find what you need.",
-    "I'm here to help you get the most out of Nous Wealth. Ask about navigating sections, using tools, understanding reports, or optimizing your workflow.",
-  ],
-};
-
-function getContextualResponse(userInput: string, currentLocation: string): string {
-  const input = userInput.toLowerCase();
-  
-  // High priority keyword matches for wealth strategies
-  if (input.includes("rebalance") || input.includes("allocation")) {
-    return "Based on your portfolio analysis, I recommend rebalancing your tech exposure. Your current allocation is 45% vs. the target 35%.";
-  }
-  if (input.includes("tax") || input.includes("harvesting")) {
-    return "I've identified a tax-loss harvesting opportunity in your McKenzie Trust account that could offset $50k+ in gains.";
-  }
-  if (input.includes("income") || input.includes("yield")) {
-    return "Your fixed income allocation is underperforming. Consider adjusting the duration to capture higher yields in the current rate environment.";
-  }
-  if (input.includes("retirement") || input.includes("estate") || input.includes("wealth support")) {
-    return "Wealth support: I can help with retirement planning, estate tax optimization, and intergenerational wealth transfer strategies. What's your primary goal?";
-  }
-
-  let matchedCategory = null;
-  let matchScore = 0;
-
-  // Add location-based bias to scoring
-  const locationKeywords: Record<string, string[]> = {
-    "/": ["dashboard", "overview", "aum", "summary"],
-    "/clients": ["client", "manager", "table", "list", "status", "people"],
-    "/portfolios": ["portfolio", "allocation", "analytics", "engine", "metric", "sharpe", "alpha", "beta"],
-    "/market": ["market", "global", "news", "sector", "impact", "trend", "yield"],
-  };
-
-  // Define keyword patterns for each section
-  const categoryKeywords: Record<string, { keywords: string[]; score: number }> = {
-    dashboard: {
-      keywords: ["dashboard", "overview", "aum", "assets under management", "stats", "metrics", "cards", "chart", "trend", "total", "summary"],
-      score: currentLocation === "/" ? 2 : 0,
-    },
-    clients: {
-      keywords: ["client", "account", "book", "manage", "customer", "relationship", "list", "table", "status", "people", "sarah chen", "mark thompson"],
-      score: currentLocation === "/clients" ? 2 : 0,
-    },
-    portfolios: {
-      keywords: ["portfolio", "allocation", "asset", "position", "holdings", "analysis", "rebalance", "target", "engine", "analytics", "sharpe", "alpha", "beta", "volatility", "efficiency"],
-      score: currentLocation === "/portfolios" ? 2 : 0,
-    },
-    market: {
-      keywords: ["market", "insight", "trend", "sector", "economic", "yield", "rate", "data", "outlook", "global", "news", "impact", "tactical"],
-      score: currentLocation === "/market" ? 2 : 0,
-    },
-    navigation: {
-      keywords: ["navigate", "sidebar", "menu", "page", "section", "button", "go to", "find", "where", "how to get"],
-      score: 0,
-    },
-    settings: {
-      keywords: ["settings", "preferences", "configure", "setup", "customize", "options", "profile"],
-      score: 0,
-    },
-    help: {
-      keywords: ["help", "guide", "how", "explain", "what is", "feature", "use", "understand", "tutorial"],
-      score: 0,
-    },
-  };
-
-  // Score each category based on keyword matches
-  for (const [category, data] of Object.entries(categoryKeywords)) {
-    for (const keyword of data.keywords) {
-      if (input.includes(keyword)) {
-        categoryKeywords[category].score += 1;
-      }
-    }
-  }
-
-  // Find the category with highest score
-  for (const [category, data] of Object.entries(categoryKeywords)) {
-    if (data.score > matchScore) {
-      matchScore = data.score;
-      matchedCategory = category;
-    }
-  }
-
-  // Return category-specific response if matched, otherwise general response
-  if (matchedCategory && matchScore > 0 && appAssistanceKnowledge[matchedCategory]) {
-    const responses = appAssistanceKnowledge[matchedCategory];
-    return responses[Math.floor(Math.random() * responses.length)];
-  }
-
-  // Default general app assistance responses
-  const generalResponses = [
-    "I'm here to help you navigate and use the Nous Wealth application! Ask me about the Dashboard, Clients section, Portfolios, Market Insights, or how to use any feature.",
-    "Welcome! I can guide you through the Nous Wealth platform. Need help with a specific section? Ask about Dashboard, Clients, Portfolios, Market Insights, navigation, or Settings.",
-    "I'm your application assistant for Nous Wealth. Ask me about any section, feature, or workflow - I'll help you find what you need and explain how to use it.",
-  ];
-
-  return generalResponses[Math.floor(Math.random() * generalResponses.length)];
 }
 
 export function FloatingChatbot() {
@@ -183,7 +52,7 @@ export function FloatingChatbot() {
     setIsLoading(true);
 
     setTimeout(() => {
-      const response = getContextualResponse(input, location);
+      const response = getAIResponse(input, location);
       const assistantMessage: Message = {
         id: String(Date.now() + 1),
         type: "assistant",
