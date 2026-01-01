@@ -15,26 +15,26 @@ export const KNOWLEDGE_BASE = {
 };
 
 export function getAIResponse(input: string, location: string = "/") {
-  const lower = input.toLowerCase();
+  const lower = input.trim().toLowerCase();
 
   // 1. Strategy Keywords (High Priority)
-  if (lower.includes("rebalance") || lower.includes("allocation") || lower.includes("drift")) 
+  if (lower.includes("rebalanc") || lower.includes("allocation") || lower.includes("drift")) 
     return KNOWLEDGE_BASE.strategies.rebalance;
-  if (lower.includes("tax") || lower.includes("harvesting") || lower.includes("gain")) 
+  if (lower.includes("tax") || lower.includes("harvest") || lower.includes("gain")) 
     return KNOWLEDGE_BASE.strategies.tax;
   if (lower.includes("income") || lower.includes("yield") || lower.includes("bond")) 
     return KNOWLEDGE_BASE.strategies.income;
-  if (lower.includes("retirement") || lower.includes("estate") || lower.includes("wealth support") || lower.includes("goal")) 
+  if (lower.includes("retire") || lower.includes("estate") || lower.includes("wealth support") || lower.includes("goal")) 
     return KNOWLEDGE_BASE.strategies.support;
 
   // 2. Application Context
-  if (lower.includes("dashboard") || (location === "/" && (lower.includes("here") || lower.includes("this"))))
+  if (lower.includes("dashboard") || (location === "/" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
     return KNOWLEDGE_BASE.application.dashboard;
-  if (lower.includes("client") || (location === "/clients" && (lower.includes("here") || lower.includes("this"))))
+  if (lower.includes("client") || (location === "/clients" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
     return KNOWLEDGE_BASE.application.clients;
-  if (lower.includes("portfolio") || (location === "/portfolios" && (lower.includes("here") || lower.includes("this"))))
+  if (lower.includes("portfolio") || (location === "/portfolios" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
     return KNOWLEDGE_BASE.application.portfolios;
-  if (lower.includes("market") || (location === "/market" && (lower.includes("here") || lower.includes("this"))))
+  if (lower.includes("market") || (location === "/market" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
     return KNOWLEDGE_BASE.application.market;
 
   // 3. Fallback
