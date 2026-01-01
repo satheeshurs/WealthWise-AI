@@ -11,7 +11,7 @@ import Market from "@/pages/Market";
 import NotFound from "@/pages/not-found";
 
 // Placeholder page for settings
-const Settings = () => <div className="p-4"><h1 className="text-2xl font-serif font-bold mb-4">Account Settings</h1><p className="text-muted-foreground">Configure your Nousingo Systems preferences.</p></div>;
+const Settings = () => <div className="p-4"><h1 className="text-2xl font-serif font-bold mb-4">Account Settings</h1><p className="text-muted-foreground">Configure your Nous Infosystems preferences.</p></div>;
 
 function Router() {
   return (
