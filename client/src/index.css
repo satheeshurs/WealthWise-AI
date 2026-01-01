@@ -70,7 +70,7 @@
   --secondary: 210 100% 33%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 210 20% 94%;
+  --muted: 210 20% 96%;
   --muted-foreground: 215 20% 45%;
 
   --accent: 210 100% 33%;
@@ -79,11 +79,11 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 23 90% 54%;
+  --border: 210 20% 90%;
+  --input: 210 20% 90%;
+  --ring: 210 100% 33%;
 
-  --radius: 0.375rem;
+  --radius: 0.25rem;
 
   --sidebar: 210 100% 15%; /* Deep Blue Sidebar */
   --sidebar-foreground: 210 20% 95%;
