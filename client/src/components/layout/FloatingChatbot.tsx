@@ -137,7 +137,7 @@ export function FloatingChatbot() {
     {
       id: "1",
       type: "assistant",
-      content: "Hi! 👋 I'm your Nousingo Assistant. I'm here to help you navigate our systems. I'm currently monitoring your view on the " + (location === "/" ? "Dashboard" : location.slice(1).charAt(0).toUpperCase() + location.slice(2)) + " page. How can I assist you today?",
+      content: "Hi! 👋 I'm your Nous Wealth AI Assistant. I'm here to help you navigate our wealth management systems. I'm currently monitoring your view on the " + (location === "/" ? "Dashboard" : location.slice(1).charAt(0).toUpperCase() + location.slice(2)) + " page. How can I assist you today?",
       timestamp: new Date(),
     },
   ]);
@@ -210,8 +210,8 @@ export function FloatingChatbot() {
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
               <div className="text-white">
-                <h3 className="font-semibold text-sm">Nousingo Assistant</h3>
-                <p className="text-xs opacity-80">System Support AI</p>
+                <h3 className="font-semibold text-sm">Nous Wealth AI</h3>
+                <p className="text-xs opacity-80">System Support Assistant</p>
               </div>
             </div>
             <button

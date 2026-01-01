@@ -50,51 +50,49 @@
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 }
 
-/* NOUSINGO SYSTEMS THEME: TECH-FORWARD, VIBRANT, PRECISION */
+/* NOUS INFOSYSTEMS THEME: ORANGE, BLUE, PROFESSIONAL */
 :root {
-  /* Clean White & Deep Slate Base */
+  /* Light Mode */
   --background: 210 20% 98%;
-  --foreground: 220 40% 10%;
+  --foreground: 222 47% 11%;
 
   --card: 0 0% 100%;
-  --card-foreground: 220 40% 10%;
+  --card-foreground: 222 47% 11%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 220 40% 10%;
+  --popover-foreground: 222 47% 11%;
 
-  /* Nousingo Blue: Electric & Precise */
-  --primary: 221 83% 53%; 
-  --primary-foreground: 210 40% 98%;
+  /* Nous Orange: #F37021 */
+  --primary: 23 90% 54%; 
+  --primary-foreground: 0 0% 100%;
 
-  /* Tech Silver */
-  --secondary: 210 20% 90%;
-  --secondary-foreground: 220 40% 15%;
+  /* Nous Blue: #0054A6 */
+  --secondary: 210 100% 33%;
+  --secondary-foreground: 0 0% 100%;
 
-  /* Muted UI elements */
   --muted: 210 20% 94%;
   --muted-foreground: 215 20% 45%;
 
-  /* Success Green */
-  --accent: 142 70% 45%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 210 100% 33%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 221 83% 53%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 23 90% 54%;
 
-  --radius: 0.5rem;
+  --radius: 0.375rem;
 
-  --sidebar: 222 47% 11%;
-  --sidebar-foreground: 213 32% 91%;
-  --sidebar-primary: 221 83% 53%;
+  --sidebar: 210 100% 15%; /* Deep Blue Sidebar */
+  --sidebar-foreground: 210 20% 95%;
+  --sidebar-primary: 23 90% 54%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217 33% 17%;
-  --sidebar-accent-foreground: 213 32% 91%;
-  --sidebar-border: 217 33% 17%;
-  --sidebar-ring: 221 83% 53%;
+  --sidebar-accent: 210 100% 20%;
+  --sidebar-accent-foreground: 210 20% 95%;
+  --sidebar-border: 210 100% 20%;
+  --sidebar-ring: 23 90% 54%;
 }
 
 .dark {
@@ -107,24 +105,24 @@
   --popover: 222 47% 6%;
   --popover-foreground: 213 32% 91%;
 
-  --primary: 221 83% 53%;
-  --primary-foreground: 210 40% 98%;
+  --primary: 23 90% 54%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 213 32% 91%;
+  --secondary: 210 100% 33%;
+  --secondary-foreground: 0 0% 100%;
 
   --muted: 217 33% 17%;
   --muted-foreground: 215 20% 65%;
 
-  --accent: 142 70% 45%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 210 100% 33%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 62% 30%;
   --destructive-foreground: 210 40% 98%;
 
   --border: 217 33% 17%;
   --input: 217 33% 17%;
-  --ring: 221 83% 53%;
+  --ring: 23 90% 54%;
 }
 
 @layer base {
@@ -133,8 +131,5 @@
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif tracking-tight;
   }
 }

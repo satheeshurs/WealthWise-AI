@@ -40,7 +40,7 @@ export function AIInsights() {
           <div className="p-1.5 rounded-md bg-indigo-100 text-indigo-600">
             <Sparkles className="h-4 w-4" />
           </div>
-          <CardTitle className="text-base font-serif font-semibold">Nous AI Insights</CardTitle>
+          <CardTitle className="text-base font-serif font-semibold">Nous Wealth AI Insights</CardTitle>
         </div>
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-7">Settings</Button>
       </CardHeader>
