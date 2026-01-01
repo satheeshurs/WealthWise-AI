@@ -54,6 +54,21 @@ const appAssistanceKnowledge: Record<string, string[]> = {
 
 function getContextualResponse(userInput: string, currentLocation: string): string {
   const input = userInput.toLowerCase();
+  
+  // High priority keyword matches for wealth strategies
+  if (input.includes("rebalance") || input.includes("allocation")) {
+    return "Based on your portfolio analysis, I recommend rebalancing your tech exposure. Your current allocation is 45% vs. the target 35%.";
+  }
+  if (input.includes("tax") || input.includes("harvesting")) {
+    return "I've identified a tax-loss harvesting opportunity in your McKenzie Trust account that could offset $50k+ in gains.";
+  }
+  if (input.includes("income") || input.includes("yield")) {
+    return "Your fixed income allocation is underperforming. Consider adjusting the duration to capture higher yields in the current rate environment.";
+  }
+  if (input.includes("retirement") || input.includes("estate") || input.includes("wealth support")) {
+    return "Wealth support: I can help with retirement planning, estate tax optimization, and intergenerational wealth transfer strategies. What's your primary goal?";
+  }
+
   let matchedCategory = null;
   let matchScore = 0;
 
