@@ -5,6 +5,7 @@ import {
   Users, 
   PieChart, 
   TrendingUp, 
+  Sparkles,
   Settings, 
   LogOut 
 } from "lucide-react";
@@ -14,6 +15,7 @@ const sidebarLinks = [
   { icon: Users, label: "Clients", href: "/clients" },
   { icon: PieChart, label: "Portfolios", href: "/portfolios" },
   { icon: TrendingUp, label: "Market Insights", href: "/market" },
+  { icon: Sparkles, label: "AI Advisor", href: "/advisor" },
 ];
 
 export function Sidebar() {
