@@ -11,6 +11,9 @@ export const KNOWLEDGE_BASE = {
     clients: "The Clients section manages your relationships. Click any client to see account-level holdings, performance metrics, and risk profiles.",
     portfolios: "The Portfolios section provides deep analysis of allocations. Identify concentration risks, compare against benchmarks, and plan rebalancing strategies.",
     market: "Market Insights gives you real-time data, sector trends, and yield curves to inform your tactical adjustments.",
+    rebalance: "The Rebalancing tool (found in the sidebar) allows you to analyze portfolio drift and execute bulk rebalancing trades to bring client accounts back to their target asset allocation.",
+    orders: "The Order Management screen (found in the sidebar) provides a central view to monitor all active and historical trade executions. You can track status (Filled, Pending, Cancelled) and trade details here.",
+    navigation: "You can navigate the application using the left sidebar. If you need more screen space, click the orange menu icon in the top-left corner to collapse or expand the menu."
   }
 };
 
@@ -18,8 +21,8 @@ export function getAIResponse(input: string, location: string = "/") {
   const lower = input.trim().toLowerCase();
 
   // 1. Strategy Keywords (High Priority)
-  if (lower.includes("rebalanc") || lower.includes("allocation") || lower.includes("drift")) 
-    return KNOWLEDGE_BASE.strategies.rebalance;
+  if (lower.includes("rebalanc") || lower.includes("drift") || lower.includes("correct")) 
+    return KNOWLEDGE_BASE.strategies.rebalance + " " + KNOWLEDGE_BASE.application.rebalance;
   if (lower.includes("tax") || lower.includes("harvest") || lower.includes("gain")) 
     return KNOWLEDGE_BASE.strategies.tax;
   if (lower.includes("income") || lower.includes("yield") || lower.includes("bond")) 
@@ -27,7 +30,11 @@ export function getAIResponse(input: string, location: string = "/") {
   if (lower.includes("retire") || lower.includes("estate") || lower.includes("wealth support") || lower.includes("goal")) 
     return KNOWLEDGE_BASE.strategies.support;
 
-  // 2. Application Context
+  // 2. Application Context & Navigation
+  if (lower.includes("order") || lower.includes("trade") || lower.includes("status") || lower.includes("execution"))
+    return KNOWLEDGE_BASE.application.orders;
+  if (lower.includes("navigate") || lower.includes("menu") || lower.includes("sidebar") || lower.includes("collapse") || lower.includes("expand") || lower.includes("find"))
+    return KNOWLEDGE_BASE.application.navigation;
   if (lower.includes("dashboard") || (location === "/" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
     return KNOWLEDGE_BASE.application.dashboard;
   if (lower.includes("client") || (location === "/clients" && (lower.includes("here") || lower.includes("this") || lower.includes("what") || lower.includes("how"))))
