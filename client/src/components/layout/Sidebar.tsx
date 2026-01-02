@@ -22,13 +22,21 @@ const sidebarLinks = [
   { icon: Sparkles, label: "AI Advisor", href: "/advisor" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const [location] = useLocation();
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
-      <div className="flex h-16 items-center px-6">
-        <h1 className="font-serif text-xl font-bold tracking-tight text-white uppercase">
+    <div className={cn(
+      "flex h-screen flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-all duration-300",
+      isOpen ? "w-64" : "w-0 overflow-hidden border-none"
+    )}>
+      <div className="flex h-16 items-center px-6 justify-between">
+        <h1 className="font-serif text-xl font-bold tracking-tight text-white uppercase truncate">
           Nous <span className="text-sidebar-primary">Wealth</span>
         </h1>
       </div>

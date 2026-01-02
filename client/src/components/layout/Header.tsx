@@ -3,11 +3,15 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import professionalImage from "@assets/Screenshot_2025-05-27_145726_1767256689663.png";
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   return (
     <header className="h-16 border-b border-border bg-card px-6 flex items-center justify-between sticky top-0 z-10 shadow-sm">
       <div className="flex items-center gap-4 w-1/3">
-        <button className="lg:hidden p-2 hover:bg-muted rounded-full">
+        <button 
+          onClick={onMenuClick}
+          className="p-2 hover:bg-muted rounded-md transition-colors"
+          data-testid="button-toggle-sidebar"
+        >
           <Menu className="h-5 w-5 text-muted-foreground" />
         </button>
         <div className="relative w-full max-sm:hidden max-w-sm">
