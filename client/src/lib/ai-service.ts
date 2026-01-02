@@ -13,14 +13,28 @@ export const KNOWLEDGE_BASE = {
     market: "Market Insights gives you real-time data, sector trends, and yield curves to inform your tactical adjustments.",
     rebalance: "The Rebalancing tool (found in the sidebar) allows you to analyze portfolio drift and execute bulk rebalancing trades to bring client accounts back to their target asset allocation.",
     orders: "The Order Management screen (found in the sidebar) provides a central view to monitor all active and historical trade executions. You can track status (Filled, Pending, Cancelled) and trade details here.",
-    navigation: "You can navigate the application using the left sidebar. If you need more screen space, click the orange menu icon in the top-left corner to collapse or expand the menu."
+    navigation: "You can navigate the application using the left sidebar. If you need more screen space, click the orange menu icon in the top-left corner to collapse or expand the menu.",
+    models: {
+      overview: "Model management allows you to create reusable investment frameworks. The system supports two primary model types: Sleeve and Strategy.",
+      sleeveVsStrategy: "• Sleeve Models: Focused components representing a single asset class or niche strategy (e.g., 'Core Large Cap'). Used as building blocks.\n• Strategy Models: High-level 'master' models that aggregate multiple Sleeves or direct securities into a complete client allocation (e.g., 'Balanced Growth').",
+      hierarchy: "1. Asset Type (Level 1): Broad categories like Equity or Fixed Income.\n2. Asset Class (Level 2): Specific segments like U.S. Small Cap or High Yield Bonds.\n3. Security Level (Level 3): The specific instrument (e.g., AAPL, AGG).",
+      warnings: "⚠️ Avoid Mixing Levels: Do not define targets for an Asset Type and a specific Security in the same node.\n⚠️ Hierarchy Depth: Ensure every Strategy Model drills down to liquid securities for execution."
+    }
   }
 };
 
 export function getAIResponse(input: string, location: string = "/") {
   const lower = input.trim().toLowerCase();
 
-  // 1. Strategy Keywords (High Priority)
+  // 1. Model Management & Construction (High Priority)
+  if (lower.includes("model") || lower.includes("sleeve") || lower.includes("strategy") || lower.includes("hierarchy")) {
+    return `${KNOWLEDGE_BASE.application.models.overview}\n\n` +
+           `${KNOWLEDGE_BASE.application.models.sleeveVsStrategy}\n\n` +
+           `**Hierarchy Guidance:**\n${KNOWLEDGE_BASE.application.models.hierarchy}\n\n` +
+           `${KNOWLEDGE_BASE.application.models.warnings}`;
+  }
+
+  // 2. Strategy Keywords
   if (lower.includes("rebalanc") || lower.includes("drift") || lower.includes("correct")) 
     return KNOWLEDGE_BASE.strategies.rebalance + " " + KNOWLEDGE_BASE.application.rebalance;
   if (lower.includes("tax") || lower.includes("harvest") || lower.includes("gain")) 
