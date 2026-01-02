@@ -10,6 +10,7 @@ import Portfolios from "@/pages/Portfolios";
 import Market from "@/pages/Market";
 import Trading from "@/pages/Trading";
 import Orders from "@/pages/Orders";
+import Models from "@/pages/Models";
 import AIAdvisor from "@/pages/AIAdvisor";
 import NotFound from "@/pages/not-found";
 
@@ -26,6 +27,7 @@ function Router() {
         <Route path="/market" component={Market} />
         <Route path="/trading" component={Trading} />
         <Route path="/orders" component={Orders} />
+        <Route path="/models" component={Models} />
         <Route path="/advisor" component={AIAdvisor} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
