@@ -1,10 +1,30 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid, Layers, Info, AlertTriangle } from "lucide-react";
+import { Plus, LayoutGrid, Layers, Info, AlertTriangle, X, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Models() {
-  const models = [
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [models, setModels] = useState([
     {
       id: "M1",
       name: "Global Aggressive Strategy",
@@ -29,7 +49,25 @@ export default function Models() {
       status: "Draft",
       description: "60/40 balanced model focused on yield generation.",
     }
-  ];
+  ]);
+
+  const [newModel, setNewModel] = useState({
+    name: "",
+    type: "Strategy",
+    description: ""
+  });
+
+  const handleCreate = () => {
+    const model = {
+      id: `M${models.length + 1}`,
+      ...newModel,
+      lastUpdated: new Date().toISOString().split('T')[0],
+      status: "Draft"
+    };
+    setModels([model, ...models]);
+    setIsCreateOpen(false);
+    setNewModel({ name: "", type: "Strategy", description: "" });
+  };
 
   return (
     <div className="space-y-6">
@@ -38,10 +76,65 @@ export default function Models() {
           <h1 className="text-3xl font-serif font-bold text-primary">Model Management</h1>
           <p className="text-muted-foreground mt-1">Create and manage reusable investment frameworks.</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90" data-testid="button-create-model">
+        <Button 
+          className="bg-primary hover:bg-primary/90" 
+          onClick={() => setIsCreateOpen(true)}
+          data-testid="button-create-model"
+        >
           <Plus className="mr-2 h-4 w-4" /> Create New Model
         </Button>
       </div>
+
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Create New Investment Model</DialogTitle>
+            <DialogDescription>
+              Define the base parameters for your new model. You can configure hierarchy levels after saving.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Model Name</Label>
+              <Input 
+                id="name" 
+                placeholder="e.g. ESG Focused Growth Strategy" 
+                value={newModel.name}
+                onChange={(e) => setNewModel({...newModel, name: e.target.value})}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="type">Model Type</Label>
+              <Select 
+                value={newModel.type} 
+                onValueChange={(value) => setNewModel({...newModel, type: value})}
+              >
+                <SelectTrigger id="type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Strategy">Strategy Model (Master)</SelectItem>
+                  <SelectItem value="Sleeve">Sleeve Model (Component)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea 
+                id="description" 
+                placeholder="Describe the investment objective..." 
+                className="h-24"
+                value={newModel.description}
+                onChange={(e) => setNewModel({...newModel, description: e.target.value})}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreate} disabled={!newModel.name}>Create Model</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="border-l-4 border-l-blue-600">
