@@ -9,6 +9,7 @@ import Clients from "@/pages/Clients";
 import Portfolios from "@/pages/Portfolios";
 import Market from "@/pages/Market";
 import AIAdvisor from "@/pages/AIAdvisor";
+import Trading from "@/pages/Trading";
 import NotFound from "@/pages/not-found";
 
 // Placeholder page for settings
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/clients" component={Clients} />
         <Route path="/portfolios" component={Portfolios} />
         <Route path="/market" component={Market} />
+        <Route path="/trading" component={Trading} />
         <Route path="/advisor" component={AIAdvisor} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
