@@ -9,10 +9,11 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
       <div className="flex items-center gap-4 w-1/3">
         <button 
           onClick={onMenuClick}
-          className="p-2 hover:bg-muted rounded-md transition-colors"
+          className="p-2 hover:bg-muted rounded-md transition-colors mr-2"
           data-testid="button-toggle-sidebar"
+          aria-label="Toggle Sidebar"
         >
-          <Menu className="h-5 w-5 text-muted-foreground" />
+          <Menu className="h-5 w-5 text-primary" />
         </button>
         <div className="relative w-full max-sm:hidden max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
