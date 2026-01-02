@@ -28,15 +28,31 @@ export function getAIResponse(input: string, location: string = "/") {
 
   // 1. Model Management & Construction (High Priority)
   if (lower.includes("model") || lower.includes("sleeve") || lower.includes("strategy") || lower.includes("hierarchy")) {
-    return `${KNOWLEDGE_BASE.application.models.overview}\n\n` +
-           `${KNOWLEDGE_BASE.application.models.sleeveVsStrategy}\n\n` +
-           `**Hierarchy Guidance:**\n${KNOWLEDGE_BASE.application.models.hierarchy}\n\n` +
-           `${KNOWLEDGE_BASE.application.models.warnings}`;
+    if (lower.includes("sleeve") && lower.includes("strategy")) {
+      return KNOWLEDGE_BASE.application.models.sleeveVsStrategy;
+    }
+    if (lower.includes("hierarchy") || lower.includes("level")) {
+      return KNOWLEDGE_BASE.application.models.hierarchy;
+    }
+    if (lower.includes("mistake") || lower.includes("warning") || lower.includes("wrong")) {
+      return KNOWLEDGE_BASE.application.models.warnings;
+    }
+    return `${KNOWLEDGE_BASE.application.models.overview}\n\n${KNOWLEDGE_BASE.application.models.sleeveVsStrategy}`;
   }
 
   // 2. Strategy Keywords
-  if (lower.includes("rebalanc") || lower.includes("drift") || lower.includes("correct")) 
-    return KNOWLEDGE_BASE.strategies.rebalance + " " + KNOWLEDGE_BASE.application.rebalance;
+  if (lower.includes("rebalanc") || lower.includes("drift")) {
+    if (lower.includes("how") || lower.includes("where")) return KNOWLEDGE_BASE.application.rebalance;
+    return KNOWLEDGE_BASE.strategies.rebalance;
+  }
+  
+  if (lower.includes("order") || lower.includes("trade")) {
+    return KNOWLEDGE_BASE.application.orders;
+  }
+
+  if (lower.includes("navigate") || lower.includes("menu") || lower.includes("sidebar")) {
+    return KNOWLEDGE_BASE.application.navigation;
+  }
   if (lower.includes("tax") || lower.includes("harvest") || lower.includes("gain")) 
     return KNOWLEDGE_BASE.strategies.tax;
   if (lower.includes("income") || lower.includes("yield") || lower.includes("bond")) 
