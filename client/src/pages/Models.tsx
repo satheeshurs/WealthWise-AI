@@ -8,7 +8,7 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogDescription,
+  DialogDescription, 
   DialogFooter
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ export default function Models() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingModel, setEditingModel] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [models, setModels] = useState([
     {
       id: "M1",
@@ -69,6 +70,53 @@ export default function Models() {
     description: ""
   });
 
+  const mockSecurities = [
+    { ticker: "VOO", name: "Vanguard S&P 500 ETF", type: "ETF" },
+    { ticker: "VXUS", name: "Vanguard Total Intl Stock ETF", type: "ETF" },
+    { ticker: "BND", name: "Vanguard Total Bond Market ETF", type: "ETF" },
+    { ticker: "AAPL", name: "Apple Inc.", type: "Equity" },
+    { ticker: "MSFT", name: "Microsoft Corp.", type: "Equity" },
+    { ticker: "GOOGL", name: "Alphabet Inc.", type: "Equity" },
+    { ticker: "TSLA", name: "Tesla, Inc.", type: "Equity" },
+    { ticker: "AMZN", name: "Amazon.com, Inc.", type: "Equity" },
+    { ticker: "VTI", name: "Vanguard Total Stock Market ETF", type: "ETF" },
+    { ticker: "AGG", name: "iShares Core U.S. Aggregate Bond ETF", type: "ETF" }
+  ];
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.length > 1) {
+      const results = mockSecurities.filter(s => 
+        s.ticker.toLowerCase().includes(query.toLowerCase()) || 
+        s.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleSelectSecurity = (security: any) => {
+    if (!editingModel) return;
+    
+    const newSecurity = {
+      id: `S${Date.now()}`,
+      ticker: security.ticker,
+      name: security.name,
+      weight: 0,
+      type: security.type
+    };
+
+    const updatedModel = {
+      ...editingModel,
+      securities: [...(editingModel.securities || []), newSecurity]
+    };
+    
+    setEditingModel(updatedModel);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
   const handleCreate = () => {
     const model = {
       id: `M${models.length + 1}`,
@@ -80,26 +128,6 @@ export default function Models() {
     setModels([model, ...models]);
     setIsCreateOpen(false);
     setNewModel({ name: "", type: "Strategy", description: "" });
-  };
-
-  const handleAddSecurity = () => {
-    if (!searchQuery || !editingModel) return;
-    
-    const newSecurity = {
-      id: `S${Date.now()}`,
-      ticker: searchQuery.toUpperCase(),
-      name: `${searchQuery.toUpperCase()} Investment`,
-      weight: 0,
-      type: "Security"
-    };
-
-    const updatedModel = {
-      ...editingModel,
-      securities: [...(editingModel.securities || []), newSecurity]
-    };
-    
-    setEditingModel(updatedModel);
-    setSearchQuery("");
   };
 
   const handleRemoveSecurity = (id: string) => {
@@ -200,20 +228,36 @@ export default function Models() {
           </DialogHeader>
           
           <div className="space-y-6 py-4">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Search Ticker, Name, or ISIN..." 
-                  className="pl-9"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddSecurity()}
-                />
+            <div className="relative">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search Ticker (e.g. AAPL, VOO)..." 
+                    className="pl-9"
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                  />
+                </div>
               </div>
-              <Button onClick={handleAddSecurity}>
-                <Plus className="mr-2 h-4 w-4" /> Add
-              </Button>
+              
+              {searchResults.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  {searchResults.map((s, i) => (
+                    <button
+                      key={i}
+                      className="w-full text-left px-4 py-2 hover:bg-accent flex items-center justify-between transition-colors border-b last:border-0"
+                      onClick={() => handleSelectSecurity(s)}
+                    >
+                      <div>
+                        <span className="font-bold text-primary">{s.ticker}</span>
+                        <span className="ml-2 text-sm text-muted-foreground">{s.name}</span>
+                      </div>
+                      <Badge variant="outline" className="text-[10px] uppercase">{s.type}</Badge>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="rounded-md border">
