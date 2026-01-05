@@ -17,8 +17,9 @@ export const KNOWLEDGE_BASE = {
     models: {
       overview: "Model management allows you to create reusable investment frameworks. The system supports two primary model types: Sleeve and Strategy.",
       sleeveVsStrategy: "• Sleeve Models: Focused components representing a single asset class or niche strategy (e.g., 'Core Large Cap'). Used as building blocks.\n• Strategy Models: High-level 'master' models that aggregate multiple Sleeves or direct securities into a complete client allocation (e.g., 'Balanced Growth').",
-      hierarchy: "1. Asset Type (Level 1): Broad categories like Equity or Fixed Income.\n2. Asset Class (Level 2): Specific segments like U.S. Small Cap or High Yield Bonds.\n3. Security Level (Level 3): The specific instrument (e.g., AAPL, AGG).",
-      warnings: "⚠️ Avoid Mixing Levels: Do not define targets for an Asset Type and a specific Security in the same node.\n⚠️ Hierarchy Depth: Ensure every Strategy Model drills down to liquid securities for execution."
+      hierarchy: "1. Asset Type (Level 1): Broad categories like Equity or Fixed Income.\n2. Asset Class (Level 2): Specific segments like U.S. Small Cap or High Yield Bonds.\n3. Security Level (Level 3): The specific instrument (e.g., Stocks, ETFs, Mutual Funds).",
+      warnings: "⚠️ Avoid Mixing Levels: Do not define targets for an Asset Type and a specific Security in the same node.\n⚠️ Hierarchy Depth: Ensure every Strategy Model drills down to liquid securities for execution.\n⚠️ Eligibility Check: Always verify if a security is restricted or on your firm's exclusionary list before finalizing the model.",
+      securities: "### Adding Securities to a Model\n\nTo build your investment lineup:\n1. **Open Model**: Select an existing model from the Model Management dashboard.\n2. **Search & Add**: Use the search bar to find Individual Equities, ETFs, or Mutual Funds.\n3. **Allocate Weights**: Assign target percentages to each security ensuring they sum to 100%.\n\n**Pro-Tip**: Use ETFs for broad market beta and Mutual Funds for specialized active management. If a security is restricted, the system will highlight it for review."
     }
   }
 };
@@ -27,14 +28,17 @@ export function getAIResponse(input: string, location: string = "/") {
   const lower = input.trim().toLowerCase();
 
   // 1. Model Management & Construction (High Priority)
-  if (lower.includes("model") || lower.includes("sleeve") || lower.includes("strategy") || lower.includes("hierarchy")) {
+  if (lower.includes("model") || lower.includes("sleeve") || lower.includes("strategy") || lower.includes("hierarchy") || lower.includes("security") || lower.includes("investment") || lower.includes("lineup")) {
+    if (lower.includes("add") || lower.includes("securities") || lower.includes("lineup") || lower.includes("build") || lower.includes("investment")) {
+      return KNOWLEDGE_BASE.application.models.securities;
+    }
     if (lower.includes("sleeve") && lower.includes("strategy")) {
       return KNOWLEDGE_BASE.application.models.sleeveVsStrategy;
     }
     if (lower.includes("hierarchy") || lower.includes("level")) {
       return KNOWLEDGE_BASE.application.models.hierarchy;
     }
-    if (lower.includes("mistake") || lower.includes("warning") || lower.includes("wrong")) {
+    if (lower.includes("mistake") || lower.includes("warning") || lower.includes("wrong") || lower.includes("restrict") || lower.includes("eligib")) {
       return KNOWLEDGE_BASE.application.models.warnings;
     }
     return `${KNOWLEDGE_BASE.application.models.overview}\n\n${KNOWLEDGE_BASE.application.models.sleeveVsStrategy}`;
