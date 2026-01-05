@@ -13,6 +13,7 @@ export const KNOWLEDGE_BASE = {
     market: "Market Insights gives you real-time data, sector trends, and yield curves to inform your tactical adjustments.",
     rebalance: "The Rebalancing tool (found in the sidebar) allows you to analyze portfolio drift and execute bulk rebalancing trades to bring client accounts back to their target asset allocation.",
     orders: "The Order Management screen (found in the sidebar) provides a central view to monitor all active and historical trade executions. You can track status (Filled, Pending, Cancelled) and trade details here.",
+    orderManagement: "### Order Management & Execution\n\n**Order Bulking**: To minimize transaction costs and simplify management, orders for the same security across different accounts are often consolidated into a single 'Bulk Order' for execution.\n\n**Ineligible Orders**: Orders may be flagged as ineligible if they violate wash-sale rules, exceed concentration limits, or if the account has a 'Trade Block' active.\n\n**Exception Highlighting**: Look for the ⚠️ icon in the Order Grid. This indicates high-risk trades or positions where liquidity might be an issue.",
     navigation: "You can navigate the application using the left sidebar. If you need more screen space, click the orange menu icon in the top-left corner to collapse or expand the menu.",
     models: {
       overview: "Model management allows you to create reusable investment frameworks. The system supports two primary model types: Sleeve and Strategy.",
@@ -22,7 +23,8 @@ export const KNOWLEDGE_BASE = {
       securities: "### Adding Securities to a Model\n\nTo build your investment lineup:\n1. **Open Model**: Select an existing model from the Model Management dashboard.\n2. **Search & Add**: Use the search bar to find Individual Equities, ETFs, or Mutual Funds.\n3. **Allocate Weights**: Assign target percentages to each security ensuring they sum to 100%.\n\n**Pro-Tip**: Use ETFs for broad market beta and Mutual Funds for specialized active management. If a security is restricted, the system will highlight it for review.",
       allocation: "### Allocation & Drift Rules\n\n**Target Percentage**: This is the 'ideal' weight of a security in your model. The rebalancer uses this as the baseline for all trade recommendations.\n\n**Drift Thresholds**:\n• **Tight (e.g., 2%)**: Triggers frequent, small rebalancing trades. Keeps portfolio closely aligned but may increase transaction costs.\n• **Loose (e.g., 10%)**: Allows for more market movement before trading. Reduces costs but may lead to significant style drift.\n\n**Drift Impact**: When a security's actual weight moves outside your threshold (e.g., Target 10% + 5% Threshold = 15% Limit), the AI Advisor will flag it for 'Out of Tolerance' rebalancing.",
       tradePreferences: "### Trade Preferences\n\nTrade preferences ensure rebalancing trades align with firm policy and operational efficiency.\n\n**Key Settings**:\n• **Min Trade Size**: Prevents tiny 'dust' trades that increase commissions without improving allocation.\n• **Restriction Levels**: Applies ESG or SRI filters across specific instrument types.\n• **Instrument Rules**: You can define different behaviors for Equities vs. Mutual Funds (e.g., permitting fractional shares only on equities).",
-      rebalancing: "### Running the Rebalancing Tool\n\n**Sleeve Rebalancer**: Use this for asset-specific adjustments (e.g., rebalancing only the 'Core Large Cap' portion of an account).\n\n**Strategy Rebalancer**: Use this for high-level master allocation adjustments (e.g., bringing a 'Balanced Growth' portfolio back to target).\n\n**Rebalance Criteria**:\n• **Drift-Only**: Recommended. Generates trades only for securities that have breached their tolerance thresholds.\n• **Full Rebalance**: Resets all holdings to exact target weights regardless of current drift.\n\n**Exclusion Logic**: Accounts may be excluded if they have active 'Do Not Trade' flags, pending corporate actions, or insufficient cash to cover minimum trade sizes defined in your **Trade Preferences**."
+      rebalancing: "### Running the Rebalancing Tool\n\n**Sleeve Rebalancer**: Use this for asset-specific adjustments (e.g., rebalancing only the 'Core Large Cap' portion of an account).\n\n**Strategy Rebalancer**: Use this for high-level master allocation adjustments (e.g., bringing a 'Balanced Growth' portfolio back to target).\n\n**Rebalance Criteria**:\n• **Drift-Only**: Recommended. Generates trades only for securities that have breached their tolerance thresholds.\n• **Full Rebalance**: Resets all holdings to exact target weights regardless of current drift.\n\n**Exclusion Logic**: Accounts may be excluded if they have active 'Do Not Trade' flags, pending corporate actions, or insufficient cash to cover minimum trade sizes defined in your **Trade Preferences**.",
+      orders: "### Order Management & Execution\n\n**Order Bulking**: To minimize transaction costs and simplify management, orders for the same security across different accounts are often consolidated into a single 'Bulk Order' for execution.\n\n**Ineligible Orders**: Orders may be flagged as ineligible if they violate wash-sale rules, exceed concentration limits, or if the account has a 'Trade Block' active.\n\n**Exception Highlighting**: Look for the ⚠️ icon in the Order Grid. This indicates high-risk trades or positions where liquidity might be an issue."
     }
   }
 };
@@ -66,15 +68,14 @@ export function getAIResponse(input: string, location: string = "/") {
     return `${KNOWLEDGE_BASE.application.models.overview}\n\n${KNOWLEDGE_BASE.application.models.sleeveVsStrategy}`;
   }
 
-  // 2. Strategy Keywords
-  if (lower.includes("rebalanc") || lower.includes("drift")) {
-    if (lower.includes("how") || lower.includes("where")) return KNOWLEDGE_BASE.application.rebalance;
-    return KNOWLEDGE_BASE.strategies.rebalance;
-  }
-  
-  if (lower.includes("order") || lower.includes("trade")) {
+  // 2. Order Management & Execution
+  if (lower.includes("order") || lower.includes("trade") || lower.includes("execute") || lower.includes("status") || lower.includes("bulk") || lower.includes("ineligible")) {
+    if (lower.includes("bulk") || lower.includes("group")) return KNOWLEDGE_BASE.application.orderManagement;
+    if (lower.includes("ineligible") || lower.includes("risk") || lower.includes("exception")) return KNOWLEDGE_BASE.application.orderManagement;
     return KNOWLEDGE_BASE.application.orders;
   }
+
+  // 3. Strategy Keywords
 
   if (lower.includes("navigate") || lower.includes("menu") || lower.includes("sidebar")) {
     return KNOWLEDGE_BASE.application.navigation;
