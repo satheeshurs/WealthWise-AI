@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid, Layers, Info, AlertTriangle, X, Save } from "lucide-react";
+import { Plus, LayoutGrid, Layers, Info, AlertTriangle, X, Save, Search as SearchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { 
@@ -24,6 +24,8 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function Models() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingModel, setEditingModel] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [models, setModels] = useState([
     {
       id: "M1",
@@ -32,6 +34,11 @@ export default function Models() {
       lastUpdated: "2025-05-20",
       status: "Active",
       description: "Aggressive growth model with 90% equity exposure.",
+      securities: [
+        { id: "S1", ticker: "VOO", name: "Vanguard S&P 500 ETF", weight: 60, type: "ETF" },
+        { id: "S2", ticker: "VXUS", name: "Vanguard Total Intl Stock ETF", weight: 30, type: "ETF" },
+        { id: "S3", ticker: "BND", name: "Vanguard Total Bond Market ETF", weight: 10, type: "ETF" }
+      ]
     },
     {
       id: "M2",
@@ -40,6 +47,10 @@ export default function Models() {
       lastUpdated: "2025-05-18",
       status: "Active",
       description: "U.S. Large Cap focused sleeve with low tracking error.",
+      securities: [
+        { id: "S4", ticker: "AAPL", name: "Apple Inc.", weight: 7, type: "Equity" },
+        { id: "S5", ticker: "MSFT", name: "Microsoft Corp.", weight: 6, type: "Equity" }
+      ]
     },
     {
       id: "M3",
@@ -48,6 +59,7 @@ export default function Models() {
       lastUpdated: "2025-05-15",
       status: "Draft",
       description: "60/40 balanced model focused on yield generation.",
+      securities: []
     }
   ]);
 
@@ -62,11 +74,53 @@ export default function Models() {
       id: `M${models.length + 1}`,
       ...newModel,
       lastUpdated: new Date().toISOString().split('T')[0],
-      status: "Draft"
+      status: "Draft",
+      securities: []
     };
     setModels([model, ...models]);
     setIsCreateOpen(false);
     setNewModel({ name: "", type: "Strategy", description: "" });
+  };
+
+  const handleAddSecurity = () => {
+    if (!searchQuery || !editingModel) return;
+    
+    const newSecurity = {
+      id: `S${Date.now()}`,
+      ticker: searchQuery.toUpperCase(),
+      name: `${searchQuery.toUpperCase()} Investment`,
+      weight: 0,
+      type: "Security"
+    };
+
+    const updatedModel = {
+      ...editingModel,
+      securities: [...(editingModel.securities || []), newSecurity]
+    };
+    
+    setEditingModel(updatedModel);
+    setSearchQuery("");
+  };
+
+  const handleRemoveSecurity = (id: string) => {
+    setEditingModel({
+      ...editingModel,
+      securities: editingModel.securities.filter((s: any) => s.id !== id)
+    });
+  };
+
+  const handleUpdateWeight = (id: string, weight: string) => {
+    setEditingModel({
+      ...editingModel,
+      securities: editingModel.securities.map((s: any) => 
+        s.id === id ? { ...s, weight: Number(weight) || 0 } : s
+      )
+    });
+  };
+
+  const handleSaveModel = () => {
+    setModels(models.map(m => m.id === editingModel.id ? editingModel : m));
+    setEditingModel(null);
   };
 
   return (
@@ -132,6 +186,106 @@ export default function Models() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
             <Button onClick={handleCreate} disabled={!newModel.name}>Create Model</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editingModel} onOpenChange={(open) => !open && setEditingModel(null)}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Model Lineup: {editingModel?.name}</DialogTitle>
+            <DialogDescription>
+              Search and add securities to your investment model. Ensure total weight equals 100%.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search Ticker, Name, or ISIN..." 
+                  className="pl-9"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddSecurity()}
+                />
+              </div>
+              <Button onClick={handleAddSecurity}>
+                <Plus className="mr-2 h-4 w-4" /> Add
+              </Button>
+            </div>
+
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50 border-b">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-medium">Security</th>
+                    <th className="px-4 py-3 text-left font-medium">Type</th>
+                    <th className="px-4 py-3 text-right font-medium w-32">Target Weight (%)</th>
+                    <th className="px-4 py-3 text-right font-medium w-16"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {editingModel?.securities?.map((s: any) => (
+                    <tr key={s.id}>
+                      <td className="px-4 py-3">
+                        <div>
+                          <p className="font-medium">{s.ticker}</p>
+                          <p className="text-xs text-muted-foreground">{s.name}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge variant="outline" className="text-[10px] uppercase">{s.type}</Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Input 
+                          type="number" 
+                          className="text-right h-8" 
+                          value={s.weight}
+                          onChange={(e) => handleUpdateWeight(s.id, e.target.value)}
+                        />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Button variant="ghost" size="sm" onClick={() => handleRemoveSecurity(s.id)}>
+                          <X className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                  {(!editingModel?.securities || editingModel.securities.length === 0) && (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground italic">
+                        No securities added to this model yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+                <tfoot className="bg-muted/20">
+                  <tr>
+                    <td colSpan={2} className="px-4 py-3 font-bold text-right text-sm">Total Weight:</td>
+                    <td className="px-4 py-3 font-bold text-right text-sm">
+                      {editingModel?.securities?.reduce((sum: number, s: any) => sum + s.weight, 0)}%
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            {editingModel?.securities?.reduce((sum: number, s: any) => sum + s.weight, 0) !== 100 && (
+              <div className="flex items-center gap-2 p-3 rounded-md bg-amber-50 text-amber-800 text-xs border border-amber-200">
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+                <span>Total weight must equal 100% for an active strategy. Current total is {editingModel?.securities?.reduce((sum: number, s: any) => sum + s.weight, 0)}%.</span>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingModel(null)}>Discard Changes</Button>
+            <Button onClick={handleSaveModel} className="bg-primary hover:bg-primary/90">
+              <Save className="mr-2 h-4 w-4" /> Save Lineup
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -212,7 +366,7 @@ export default function Models() {
                     </td>
                     <td className="px-4 py-4 text-muted-foreground">{model.lastUpdated}</td>
                     <td className="px-4 py-4 text-right">
-                      <Button variant="ghost" size="sm" data-testid={`button-edit-${model.id}`}>Edit</Button>
+                      <Button variant="ghost" size="sm" onClick={() => setEditingModel(model)} data-testid={`button-edit-${model.id}`}>Edit</Button>
                     </td>
                   </tr>
                 ))}
