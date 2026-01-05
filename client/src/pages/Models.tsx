@@ -138,10 +138,27 @@ export default function Models() {
   };
 
   const handleUpdateWeight = (id: string, weight: string) => {
-    setEditingModel({
+    const updatedModel = {
       ...editingModel,
       securities: editingModel.securities.map((s: any) => 
         s.id === id ? { ...s, weight: Number(weight) || 0 } : s
+      )
+    };
+    
+    // Check for sum validation
+    const totalWeight = updatedModel.securities.reduce((sum: number, s: any) => sum + s.weight, 0);
+    if (totalWeight > 100) {
+      // Logic for warning or auto-adjust could go here
+    }
+    
+    setEditingModel(updatedModel);
+  };
+
+  const handleUpdateDrift = (id: string, drift: string) => {
+    setEditingModel({
+      ...editingModel,
+      securities: editingModel.securities.map((s: any) => 
+        s.id === id ? { ...s, drift: Number(drift) || 0 } : s
       )
     });
   };
@@ -266,7 +283,8 @@ export default function Models() {
                   <tr>
                     <th className="px-4 py-3 text-left font-medium">Security</th>
                     <th className="px-4 py-3 text-left font-medium">Type</th>
-                    <th className="px-4 py-3 text-right font-medium w-32">Target Weight (%)</th>
+                    <th className="px-4 py-3 text-right font-medium w-32">Target (%)</th>
+                    <th className="px-4 py-3 text-right font-medium w-32">Drift Tol (%)</th>
                     <th className="px-4 py-3 text-right font-medium w-16"></th>
                   </tr>
                 </thead>
@@ -288,6 +306,15 @@ export default function Models() {
                           className="text-right h-8" 
                           value={s.weight}
                           onChange={(e) => handleUpdateWeight(s.id, e.target.value)}
+                        />
+                      </td>
+                      <td className="px-4 py-3">
+                        <Input 
+                          type="number" 
+                          className="text-right h-8" 
+                          placeholder="e.g. 5"
+                          value={s.drift || ""}
+                          onChange={(e) => handleUpdateDrift(s.id, e.target.value)}
                         />
                       </td>
                       <td className="px-4 py-3 text-right">
