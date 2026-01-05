@@ -20,13 +20,19 @@ export const KNOWLEDGE_BASE = {
       hierarchy: "1. Asset Type (Level 1): Broad categories like Equity or Fixed Income.\n2. Asset Class (Level 2): Specific segments like U.S. Small Cap or High Yield Bonds.\n3. Security Level (Level 3): The specific instrument (e.g., Stocks, ETFs, Mutual Funds).",
       warnings: "⚠️ Avoid Mixing Levels: Do not define targets for an Asset Type and a specific Security in the same node.\n⚠️ Hierarchy Depth: Ensure every Strategy Model drills down to liquid securities for execution.\n⚠️ Eligibility Check: Always verify if a security is restricted or on your firm's exclusionary list before finalizing the model.",
       securities: "### Adding Securities to a Model\n\nTo build your investment lineup:\n1. **Open Model**: Select an existing model from the Model Management dashboard.\n2. **Search & Add**: Use the search bar to find Individual Equities, ETFs, or Mutual Funds.\n3. **Allocate Weights**: Assign target percentages to each security ensuring they sum to 100%.\n\n**Pro-Tip**: Use ETFs for broad market beta and Mutual Funds for specialized active management. If a security is restricted, the system will highlight it for review.",
-      allocation: "### Allocation & Drift Rules\n\n**Target Percentage**: This is the 'ideal' weight of a security in your model. The rebalancer uses this as the baseline for all trade recommendations.\n\n**Drift Thresholds**:\n• **Tight (e.g., 2%)**: Triggers frequent, small rebalancing trades. Keeps portfolio closely aligned but may increase transaction costs.\n• **Loose (e.g., 10%)**: Allows for more market movement before trading. Reduces costs but may lead to significant style drift.\n\n**Drift Impact**: When a security's actual weight moves outside your threshold (e.g., Target 10% + 5% Threshold = 15% Limit), the AI Advisor will flag it for 'Out of Tolerance' rebalancing."
+      allocation: "### Allocation & Drift Rules\n\n**Target Percentage**: This is the 'ideal' weight of a security in your model. The rebalancer uses this as the baseline for all trade recommendations.\n\n**Drift Thresholds**:\n• **Tight (e.g., 2%)**: Triggers frequent, small rebalancing trades. Keeps portfolio closely aligned but may increase transaction costs.\n• **Loose (e.g., 10%)**: Allows for more market movement before trading. Reduces costs but may lead to significant style drift.\n\n**Drift Impact**: When a security's actual weight moves outside your threshold (e.g., Target 10% + 5% Threshold = 15% Limit), the AI Advisor will flag it for 'Out of Tolerance' rebalancing.",
+      tradePreferences: "### Trade Preferences\n\nTrade preferences ensure rebalancing trades align with firm policy and operational efficiency.\n\n**Key Settings**:\n• **Min Trade Size**: Prevents tiny 'dust' trades that increase commissions without improving allocation.\n• **Restriction Levels**: Applies ESG or SRI filters across specific instrument types.\n• **Instrument Rules**: You can define different behaviors for Equities vs. Mutual Funds (e.g., permitting fractional shares only on equities)."
     }
   }
 };
 
 export function getAIResponse(input: string, location: string = "/") {
   const lower = input.trim().toLowerCase();
+
+  // 1. Trade Preferences & Rules
+  if (lower.includes("preference") || lower.includes("restriction") || lower.includes("minimum trade") || lower.includes("trade size")) {
+    return KNOWLEDGE_BASE.application.models.tradePreferences;
+  }
 
   // 1. Model Management & Construction (High Priority)
   if (lower.includes("model") || lower.includes("sleeve") || lower.includes("strategy") || lower.includes("hierarchy") || lower.includes("security") || lower.includes("investment") || lower.includes("lineup") || lower.includes("allocation") || lower.includes("drift") || lower.includes("threshold")) {

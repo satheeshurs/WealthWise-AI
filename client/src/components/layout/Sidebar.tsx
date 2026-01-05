@@ -9,6 +9,7 @@ import {
   RefreshCw,
   ListChecks,
   FileCode,
+  Settings2,
   Settings, 
   LogOut 
 } from "lucide-react";
@@ -21,6 +22,7 @@ const sidebarLinks = [
   { icon: FileCode, label: "Model Management", href: "/models" },
   { icon: RefreshCw, label: "Rebalancing", href: "/trading" },
   { icon: ListChecks, label: "Order Management", href: "/orders" },
+  { icon: Settings2, label: "Trade Preferences", href: "/preferences" },
   { icon: Sparkles, label: "AI Advisor", href: "/advisor" },
 ];
 
